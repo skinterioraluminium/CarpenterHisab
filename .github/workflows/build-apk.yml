@@ -1,4 +1,3 @@
-
 name: Build CarpenterHisab APK
 
 on:
@@ -25,9 +24,15 @@ jobs:
         with:
           gradle-version: '8.9'
 
-      - name: Extract Android source
+      - name: Extract source
+        run: unzip -q CarpenterHisab_SK_Interior_Aluminium_Source.zip -d source
+
+      - name: Replace KSP with KAPT
+        working-directory: source/CarpenterHisab_Android
         run: |
-          unzip -q CarpenterHisab_SK_Interior_Aluminium_Source.zip -d source
+          sed -i 's/com.google.devtools.ksp/org.jetbrains.kotlin.kapt/g' build.gradle.kts
+          sed -i 's/com.google.devtools.ksp/org.jetbrains.kotlin.kapt/g' app/build.gradle.kts
+          sed -i 's/ksp(/kapt(/g' app/build.gradle.kts
 
       - name: Build APK
         working-directory: source/CarpenterHisab_Android
